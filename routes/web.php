@@ -34,8 +34,10 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/admin/books',[BookController::class,'index'])->name('admin.books.book');
-Route::get('/admin/users',[UserController::class,'index'])->name('admin.users.user');
+Route::get('/admin/books/create',[BookController::class,'create'])->name('admin.books.create');
+Route::post('/admin/books/create',[BookController::class,'store'])->name('admin.books.store');
 
+Route::get('/admin/users',[UserController::class,'index'])->name('admin.users.user');
 
 
 /* con subcarpeta
