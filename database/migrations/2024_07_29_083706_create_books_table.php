@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
             $table->string('nombre');
-            $table->binary('imagen');
+            $table->string('imagen')->nullable();//binary
             $table->string('editorial');
             $table->string('autor');
             $table->string('genero');

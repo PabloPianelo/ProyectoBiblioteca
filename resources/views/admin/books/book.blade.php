@@ -37,7 +37,7 @@
                                         <x-dropdown-link :href="$myroute='zzz'">
                                             {{ __('Ver') }}
                                         </x-dropdown-link>
-                                        <x-dropdown-link :href="$myroute='zzz'">
+                                        <x-dropdown-link :href="route('admin.books.edit',$book->id)">
                                             {{ __('Edit') }}
                                         </x-dropdown-link>
                                         <form method="POST" action="">
@@ -51,9 +51,8 @@
                                 </x-dropdown>
                             @endauth
                         </div>
-                        <?php $imagen_base64 = base64_encode($book->imagen); ?>
                 <td>
-                    <img src="data:image/jpeg;base64,<?php echo $imagen_base64; ?>" style="width: 200px; height: auto;" />
+                    <img src="{{ asset($book->imagen) }}" style="width: 200px; height: auto;" />
                 </td>                        
                     </div>
                 </div>

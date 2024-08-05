@@ -13,8 +13,13 @@ class BookController extends Controller
 
 
     private array $rules=[
-        'title'=>'required|string|max:100',
-        'description'=>'required|string|max:300'
+             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'nombre' => 'required|string|max:255',
+            'editorial' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'genero' => 'required|string|max:255',
+            'tipo_libro' => 'required|string|max:255',
+            'tipo_libro2' => 'nullable|string|max:255',
        ];
 
 
@@ -35,31 +40,40 @@ class BookController extends Controller
     public function store(Request $request):RedirectResponse {
         $validated = $request->validate($this->rules);
 
-      
+
         if ($request->hasFile('imagen')) {
-            $imageName = time() . '.' . $request->imagen->extension();
-            $request->imagen->move(public_path('images'), $imageName);
-            $validated['imagen'] = $imageName; // Guardar el nombre de la imagen en la base de datos
+            $image = $request->file('imagen');
+            $destinationPath = 'images/book/';
+            $filename = time() . '-' . $image->getClientOriginalName();
+            
+            // Mueve el archivo al directorio deseado
+            $uploadSuccess = $image->move(public_path($destinationPath), $filename);
+            
+            // Verifica si la operación de movimiento fue exitosa
+            if ($uploadSuccess) {
+                $path = $destinationPath . $filename;
+            } else {
+                $path = null;
+            }
+        } else {
+            $path = null;
         }
 
-        if (isset($validated['id'])) {
-            $bookExists = DB::table('books')->where('id', $validated['id'])->exists();
-        
-            if ($bookExists) {
-                return redirect()
-                    ->route('admin.books.book_create_or_edit')
-                    ->with('error', 'El libro con este ID ya existe.');
-            }
+     
+        $tipo_libro = $validated['tipo_libro'];
+        if (!empty($validated['tipo_libro2'])) {
+            $tipo_libro .= "," . $validated['tipo_libro2'];
         }
+
 
         Book::create([
-            'id' => $validated['id'],
+         
             'nombre' => $validated['nombre'],
-            'imagen' => $validated['imagen'] ?? null, // Usar null si no hay imagen
+            'imagen' =>    $path, 
             'editorial' => $validated['editorial'],
             'autor' => $validated['autor'],
             'genero' => $validated['genero'],
-            'tipo_libro' => $validated['tipo_libro']
+            'tipo_libro' => $tipo_libro
         ]);
 
        // session()->flash('message','Idea creada correctamente!');
@@ -67,4 +81,52 @@ class BookController extends Controller
          return redirect()->route('admin.books.book');
      
     }
+
+    public function edit($id):View {
+
+        $book = Book:: findOrFail($id);
+
+        return view('admin.books.book_create_or_edit', [
+            'book' => $book,
+        ]);
+    }
+
+
+    public function update(Request $request,  $id): RedirectResponse
+    {
+        $validated = $request->validate($this->rules);
+        $book = Book::find($id);
+        $path = $book->imagen;
+        if ($request->hasFile('imagen')) {
+            $image = $request->file('imagen');
+            $destinationPath = 'images/book/';
+            $filename = time() . '-' . $image->getClientOriginalName();
+            $uploadSuccess = $image->move(public_path($destinationPath), $filename);
+            if ($uploadSuccess) {
+                $path = $destinationPath . $filename;
+                if ($book->imagen && file_exists(public_path($book->imagen))) {
+                    unlink(public_path($book->imagen));
+                }
+            }
+        }
+
+        $tipo_libro = $validated['tipo_libro'];
+        if (!empty($validated['tipo_libro2'])) {
+            $tipo_libro .= "," . $validated['tipo_libro2'];
+        }
+
+        $book->update([
+            'nombre' => $validated['nombre'],
+            'imagen' => $path,
+            'editorial' => $validated['editorial'],
+            'autor' => $validated['autor'],
+            'genero' => $validated['genero'],
+            'tipo_libro' => $tipo_libro,
+        ]);
+      
+        return redirect()->route('admin.books.book');
+    }
+    
+
+
 }

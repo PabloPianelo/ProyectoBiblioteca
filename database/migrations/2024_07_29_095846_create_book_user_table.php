@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('book_user', function (Blueprint $table) {
             $table->id(); // O $table->bigIncrements('id'); si necesitas una clave primaria diferente
-            $table->string('book_id'); // Asegúrate de que el tipo coincida con la tabla books
+            $table->unsignedBigInteger('book_id'); // Asegúrate de que el tipo coincida con la tabla books
             $table->unsignedBigInteger('user_id'); // Asegúrate de que el tipo coincida con la tabla users
             $table->timestamps();
 
