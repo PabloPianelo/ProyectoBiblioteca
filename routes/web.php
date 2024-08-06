@@ -38,6 +38,8 @@ Route::get('/admin/books/create',[BookController::class,'create'])->name('admin.
 Route::post('/admin/books/store',[BookController::class,'store'])->name('admin.books.store');
 Route::get('/admin/books/edit/{id}',[BookController::class,'edit'])->name('admin.books.edit');
 Route::put('/admin/books/update/{id}',[BookController::class,'update'])->name('admin.books.update');
+Route::get('/admin/books/show/{id}',[BookController::class,'show'])->name('admin.books.show');
+Route::delete('/admin/books/delete/{id}',[BookController::class,'delete'])->name('admin.books.delete');
 
 Route::get('/admin/users',[UserController::class,'index'])->name('admin.users.user');
 

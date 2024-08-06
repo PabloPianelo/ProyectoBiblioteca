@@ -2,6 +2,15 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden shadow-sm sm:rounded-lg mb-4">
+                @if (session()->has('message'))
+                
+          
+            <div class="text-center bg-gray-100 rounded-md p-2">
+            <span class="text-indigo-600 text-xl">{{session('message')}}</span>
+            </div>
+           
+                
+            @endif
                 <div class="p-6 text-gray-900 dark:text-gray-100s space-x-8">
                     <a href="{{route ('admin.books.create') }}" class="px-4 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('Agregar') }}</a>
                     <a href="#" class="px-4 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('Las Mejores') }}</a>
@@ -34,19 +43,21 @@
                                         </button>
                                     </x-slot>
                                     <x-slot name="content">
-                                        <x-dropdown-link :href="$myroute='zzz'">
+                                        <x-dropdown-link :href="route('admin.books.show',$book->id)">
                                             {{ __('Ver') }}
                                         </x-dropdown-link>
                                         <x-dropdown-link :href="route('admin.books.edit',$book->id)">
                                             {{ __('Edit') }}
                                         </x-dropdown-link>
-                                        <form method="POST" action="">
-                                            @csrf
-                                            @method('delete')
-                                            <x-dropdown-link :href="$myroute='zzz'" onclick="event.preventDefault(); this.closest('form').submit();">
-                                                {{ __('Delete') }}
-                                            </x-dropdown-link>
-                                        </form>
+                                       
+                                            <form method="POST" action="{{ route('admin.books.delete', $book->id) }}">
+                                                @csrf
+                                                @method('delete')
+                                                <x-dropdown-link href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                                                    Eliminar
+                                                </x-dropdown-link>
+                                            </form>
+                                      
                                     </x-slot>
                                 </x-dropdown>
                             @endauth

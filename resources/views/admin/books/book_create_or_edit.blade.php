@@ -76,8 +76,8 @@
                                 <option value="revista"{{ in_array('revista', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Revista</option>
                                 <option value="comic"{{ in_array('comic', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Comic</option>
                                 <option value="manga"{{ in_array('manga', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Manga</option>
-                                <option value="tapa_dura"{{ in_array('tapa_dura', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Tapa dura</option>
-                                <option value="tapa_blanda"{{ in_array('tapa_blanda', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Tapa  blanda</option>
+                                <option value="tapa dura"{{ in_array('tapa dura', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Tapa dura</option>
+                                <option value="tapa blanda"{{ in_array('tapa blanda', explode(',', old('tipo_libro', empty($book) ? '' : $book->tipo_libro))) ? 'selected' : '' }}>Tapa  blanda</option>
                             </select>
 
 

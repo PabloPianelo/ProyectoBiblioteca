@@ -76,7 +76,8 @@ class BookController extends Controller
             'tipo_libro' => $tipo_libro
         ]);
 
-       // session()->flash('message','Idea creada correctamente!');
+        session()->flash('message', 'Libro creado correctamente!');
+
  
          return redirect()->route('admin.books.book');
      
@@ -103,10 +104,11 @@ class BookController extends Controller
             $filename = time() . '-' . $image->getClientOriginalName();
             $uploadSuccess = $image->move(public_path($destinationPath), $filename);
             if ($uploadSuccess) {
-                $path = $destinationPath . $filename;
+                // Elimina la imagen anterior si existe
                 if ($book->imagen && file_exists(public_path($book->imagen))) {
                     unlink(public_path($book->imagen));
                 }
+                $path = $destinationPath . $filename;
             }
         }
 
@@ -123,7 +125,31 @@ class BookController extends Controller
             'genero' => $validated['genero'],
             'tipo_libro' => $tipo_libro,
         ]);
-      
+        session()->flash('message', 'Libro actualizado correctamente!');
+
+        return redirect()->route('admin.books.book');
+    }
+    public function show($id):View {
+
+        $book = Book:: findOrFail($id);
+
+        return view('admin.books.book_show', [
+            'book' => $book,
+        ]);
+    }
+    public function delete($id): RedirectResponse
+    {
+        $book = Book::find($id);
+    
+        // Elimina la imagen asociada si existe
+        if ($book->imagen && file_exists(public_path($book->imagen))) {
+            unlink(public_path($book->imagen));
+        }
+    
+        $book->delete();
+    
+        session()->flash('message', 'Libro eliminado correctamente!');
+    
         return redirect()->route('admin.books.book');
     }
     
