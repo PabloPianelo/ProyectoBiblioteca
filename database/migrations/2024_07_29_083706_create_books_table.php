@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('autor');
             $table->string('genero');
             $table->string('tipo_libro');
+            $table->integer('cantidad');
+
 
 
 

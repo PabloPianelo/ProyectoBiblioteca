@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 class BookController extends Controller
 {
 
@@ -18,17 +17,31 @@ class BookController extends Controller
             'editorial' => 'required|string|max:255',
             'autor' => 'required|string|max:255',
             'genero' => 'required|string|max:255',
+            'cantidad' => 'required|integer',
             'tipo_libro' => 'required|string|max:255',
             'tipo_libro2' => 'nullable|string|max:255',
        ];
 
 
 
-    public function index(/*Request $request*/):View{
-
-        $books= DB:: table (table: 'books')->get();
-        //$books= Book::myideas($request->filtro)->TheBest($request->filtro)->get();//select * from
-        return view('admin.books.book',['books'=>$books]);
+    public function index(Request $request):View{
+        
+        if ($request->is('client/Mybooks')) {
+            $userId = auth()->id();
+            $books = DB::table('books')
+                ->join('book_user', 'books.id', '=', 'book_user.book_id')
+                ->where('book_user.user_id', $userId)
+                ->select('books.*')
+                ->get();
+    
+            return view('client.books.Mybook', ['books' => $books]);
+        } elseif ($request->is('client/books')) {
+            $books = DB::table('books')->get();
+            return view('client.books.book', ['books' => $books]);
+        } else {
+            $books = DB::table('books')->get();
+            return view('admin.books.book', ['books' => $books]);
+        }
     }
 
 
@@ -73,6 +86,7 @@ class BookController extends Controller
             'editorial' => $validated['editorial'],
             'autor' => $validated['autor'],
             'genero' => $validated['genero'],
+            'cantidad' => $validated['cantidad'],
             'tipo_libro' => $tipo_libro
         ]);
 
@@ -123,20 +137,41 @@ class BookController extends Controller
             'editorial' => $validated['editorial'],
             'autor' => $validated['autor'],
             'genero' => $validated['genero'],
+            'cantidad' => $validated['cantidad'],
             'tipo_libro' => $tipo_libro,
         ]);
         session()->flash('message', 'Libro actualizado correctamente!');
 
         return redirect()->route('admin.books.book');
     }
-    public function show($id):View {
+    public function show(Request $request,$id):View {
 
         $book = Book:: findOrFail($id);
-
-        return view('admin.books.book_show', [
+        if ($request->is('client/*')) {
+        return view('client.books.book_show', [
             'book' => $book,
         ]);
+    }else{
+       
+            return view('admin.books.book_show', [
+                'book' => $book,
+            ]);
     }
+    }
+
+    public function reserve(Book $book)
+    {
+        $user = auth()->user();
+
+        // Verifica si el libro ya está reservado por el usuario
+        if (!$book->users->contains($user->id)) {
+           
+            $book->users()->attach($user->id);
+        }
+    
+        return redirect()->back()->with('message', 'Libro reservado con éxito');
+    }
+    
     public function delete($id): RedirectResponse
     {
         $book = Book::find($id);
@@ -156,3 +191,7 @@ class BookController extends Controller
 
 
 }
+// if ($book->quantity > 0) {
+//             // Restar uno a la cantidad
+//             $book->quantity--;
+//             $book->save();

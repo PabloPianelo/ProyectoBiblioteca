@@ -11,9 +11,12 @@ class Book extends Model
     use HasFactory;
 
 
-    protected $fillable=['nombre','imagen','editorial','autor','genero','tipo_libro'];
+    protected $fillable=['nombre','imagen','editorial','autor','genero','tipo_libro','cantidad'];
 
-    public function users(): BelongsToMany {
-        return $this->belongsToMany (User:: class);
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'book_user');
     }
+    
+    
 }

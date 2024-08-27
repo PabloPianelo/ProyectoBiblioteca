@@ -23,6 +23,10 @@ return new class extends Migration
 
             // Asegura que la combinación de book_id y user_id sea única
             $table->unique(['book_id', 'user_id']);
+
+            $table->date("fecha_Reserva");
+            $table->date("fecha_Fin_reserva");
+            $table->date("fecha_Devolucion_reserva");
         });
     }
 

@@ -16,20 +16,27 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-           
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('client.books.book')" :active="request()->routeIs('client.books.book')">
+                        {{ __('Bibloteca') }}
+                    </x-nav-link>
+                </div>
 
+@role('admin|bibliotecario')
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('admin.books.book')" :active="request()->routeIs('admin.books.book')">
                     {{ __('Libros') }}
                 </x-nav-link>
             </div>
-            
+            @endrole
+            @role('admin')        
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('admin.users.user')" :active="request()->routeIs('admin.users.user')">
                     {{ __('Usuarios') }}
                 </x-nav-link>
             </div>
         </div>
+        @endrole
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -50,6 +57,9 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                            <x-dropdown-link :href="route('client.books.Mybook')" :active="request()->routeIs('client.books.Mybook')">
+                                {{ __('Mis libros') }}
+                            </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

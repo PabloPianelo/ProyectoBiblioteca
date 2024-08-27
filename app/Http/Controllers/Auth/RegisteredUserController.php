@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -41,7 +42,12 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        if (Role::where('name', 'cliente')->exists()) {
+            $user->assignRole('cliente');
+        } else {
+            // Manejar el caso donde el rol no existe
+            abort(500, 'El rol cliente no existe.');
+        }
         event(new Registered($user));
 
         Auth::login($user);

@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +43,17 @@ Route::get('/admin/books/show/{id}',[BookController::class,'show'])->name('admin
 Route::delete('/admin/books/delete/{id}',[BookController::class,'delete'])->name('admin.books.delete');
 
 Route::get('/admin/users',[UserController::class,'index'])->name('admin.users.user');
+Route::get('/admin/users/create',[UserController::class,'create'])->name('admin.users.create');
+Route::post('/admin/users/store',[UserController::class,'store'])->name('admin.users.store');
+Route::get('/admin/users/show/{id}',[UserController::class,'show'])->name('admin.users.show');
+Route::put('/admin/users/{id}/toggle', [UserController::class, 'toggle'])->name('admin.users.toggle');
+Route::delete('/admin/users/delete/{id}',[UserController::class,'delete'])->name('admin.users.delete');
+
+Route::get('/client/books',[BookController::class,'index'])->name('client.books.book');
+Route::get('/client/books/show/{id}',[BookController::class,'show'])->name('client.books.show');
+Route::post('/client/books/{book}/reserve', [BookController::class, 'reserve'])->name('client.books.reserve');
+Route::get('/client/Mybooks',[BookController::class,'index'])->name('client.books.Mybook');
+
 
 
 /* con subcarpeta

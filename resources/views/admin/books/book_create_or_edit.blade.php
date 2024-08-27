@@ -21,6 +21,11 @@
                         <label  class="block text-sm font-medium text-gray-700 dark:text-gray-400">Editorial</label>
                         <x-text-input  id="editorial" class="block mt-1 w-full" type="text" name="editorial" :value="old('editorial', empty($book) ? '' : $book->editorial)" required placeholder="Ingresa la editorial" />
                         <x-input-error :messages="$errors->get('editorial')" class="mt-2" />
+                        
+                          
+                            <label  class="block text-sm font-medium text-gray-700 dark:text-gray-400">Cantidad</label>
+                            <x-text-input  id="cantidad" class="block mt-1 w-full" type="number" name="cantidad" :value="old('cantidad', empty($book) ? '' : $book->cantidad)" required placeholder="Ingresa la cantidad" />
+                            <x-input-error :messages="$errors->get('cantidad')" class="mt-2" />
 
 
                         <label  class="block text-sm font-medium text-gray-700 dark:text-gray-400">Autor</label>

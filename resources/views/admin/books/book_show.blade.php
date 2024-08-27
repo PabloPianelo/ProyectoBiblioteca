@@ -9,6 +9,7 @@
                     <p>{{$book->autor}}</p>
                     <p>{{$book->genero}}</p>
                     <p>{{$book->tipo_libro}}</p>
+                    <p>{{$book->cantidad}}</p>
                     <img src="{{ asset($book->imagen) }}" style="width: 200px; height: auto;" alt="Imagen del Libro" />
                     {{--  poner la ruta de action para hacer put--}}
                     <form method="POST" action="">
