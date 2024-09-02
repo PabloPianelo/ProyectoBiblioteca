@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->date("fecha_Reserva");
             $table->date("fecha_Fin_reserva");
-            $table->date("fecha_Devolucion_reserva");
+            $table->date("fecha_Devolucion_reserva")->nullable();
         });
     }
 

@@ -14,6 +14,10 @@
 
                     @if(auth()->user()->books->contains($book->id))
                         <button disabled class="bg-gray-500 text-blak px-4 py-2 rounded">Ya Reservado</button>
+                        @elseif($book->cantidad <= 0)
+
+                        <button disabled class="bg-gray-500 text-blak px-4 py-2 rounded">No hay mas libros</button>
+
                     @else
                         <form method="POST" action="{{ route('client.books.reserve', $book->id) }}">
                             @csrf
