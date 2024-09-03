@@ -145,27 +145,35 @@ class BookController extends Controller
 
         return redirect()->route('admin.books.book');
     }
+
     public function show(Request $request,$id):View {
 
-        $book = Book:: findOrFail($id);
-        if ($request->is('client/*')) {
-        return view('client.books.book_show', [
-            'book' => $book,
-        ]);
-    }else{
-       
-            return view('admin.books.book_show', [
-                'book' => $book,
-            ]);
-    }
-    }
+      
+            $book = Book::findOrFail($id);
+        
+            if ($request->routeIs('client.books.Myshow')) {
+                return view('client.books.book_Myshow', [
+                    'book' => $book,
+                ]);
+            } elseif ($request->routeIs('client.books.show')) {
+                return view('client.books.book_show', [
+                    'book' => $book,
+                ]);
+            } else {
+                return view('admin.books.book_show', [
+                    'book' => $book,
+                ]);
+            }
+        }
+        
 
     public function reserve(Book $book)
     {
         $user = auth()->user();
         $date = Carbon::now();
+        $fecha_Reserva=$date;
         $fechaFin_reserva = $date->addDays(15);
-        // Verifica si el libro ya está reservado por el usuario
+        
         if (!$book->users->contains($user->id)) {
             if ($book->cantidad > 0) {
                 
@@ -173,12 +181,25 @@ class BookController extends Controller
                 $book->save();
             }
             $book->users()->attach($user->id, [
-                'fecha_Reserva' => $date,
+                'fecha_Reserva' => $fecha_Reserva,
                 'fecha_Fin_reserva' => $fechaFin_reserva
             ]);        }
     
         return redirect()->back()->with('message', 'Libro reservado con éxito');
     }
+    public function devolucion(Book $book): RedirectResponse
+{
+    $user = auth()->user();
+    $date = Carbon::now();
+
+   
+    if ($book->users->contains($user->id)) {
+        
+        $book->users()->updateExistingPivot($user->id, ['fecha_Devolucion_reserva' => $date]);
+    }
+
+    return redirect()->back()->with('message', 'Fecha de devolución actualizada a hoy');
+}
     
     public function delete($id): RedirectResponse
     {
@@ -199,16 +220,3 @@ class BookController extends Controller
 
 
 }
-// public function updateDevolucion(Book $book): RedirectResponse
-// {
-//     $user = auth()->user();
-//     $date = Carbon::now();
-
-//     // Verifica si el libro está reservado por el usuario
-//     if ($book->users->contains($user->id)) {
-//         // Actualiza la fecha de devolución en la tabla pivote
-//         $book->users()->updateExistingPivot($user->id, ['fecha_Devolucion_reserva' => $date]);
-//     }
-
-//     return redirect()->back()->with('message', 'Fecha de devolución actualizada a hoy');
-// }

@@ -53,7 +53,9 @@ Route::get('/client/books',[BookController::class,'index'])->name('client.books.
 Route::get('/client/books/show/{id}',[BookController::class,'show'])->name('client.books.show');
 Route::post('/client/books/{book}/reserve', [BookController::class, 'reserve'])->name('client.books.reserve');
 Route::get('/client/Mybooks',[BookController::class,'index'])->name('client.books.Mybook');
+Route::get('/client/Myshow/{id}',[BookController::class,'show'])->name('client.books.Myshow');
 
+Route::post('/client/{book}/devolucion',[BookController::class,'devolucion'])->name('client.devolucion');
 
 
 /* con subcarpeta
