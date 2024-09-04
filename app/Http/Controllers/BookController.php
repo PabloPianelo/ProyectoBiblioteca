@@ -32,6 +32,7 @@ class BookController extends Controller
             $books = DB::table('books')
                 ->join('book_user', 'books.id', '=', 'book_user.book_id')
                 ->where('book_user.user_id', $userId)
+                ->where('book_user.activo', true)
                 ->select('books.*')
                 ->get();
     
@@ -187,19 +188,45 @@ class BookController extends Controller
     
         return redirect()->back()->with('message', 'Libro reservado con éxito');
     }
-    public function devolucion(Book $book): RedirectResponse
+
+
+   public function devolucion(Book $book): RedirectResponse
 {
     $user = auth()->user();
-    $date = Carbon::now();
+    $date = Carbon::now()->startOfDay();
 
-   
-    if ($book->users->contains($user->id)) {
-        
+    // Recuperar la fila de la tabla pivote book_user
+    $book_user = DB::table('book_user')
+        ->where('book_id', $book->id)
+        ->where('user_id', $user->id)
+        ->first();
+
+    if ($book_user) {
+        $fechaFinReserva = Carbon::parse($book_user->fecha_Fin_reserva)->startOfDay(); // Asegura que sea una instancia de Carbon
+
+        // Comparar fechas
+        if ($fechaFinReserva->lte($date)) {
+            // Desactivar usuario
+            DB::table('users')
+            ->where('id', $user->id)
+            ->update(['activo' => false]);
+        }
+
+        $book_user = DB::table('book_user')
+        ->where('book_id', $book->id)
+        ->where('user_id', $user->id)
+        ->update(['activo' => false]);
+
+        // Actualizar la fecha de devolución en la tabla pivote
         $book->users()->updateExistingPivot($user->id, ['fecha_Devolucion_reserva' => $date]);
     }
 
-    return redirect()->back()->with('message', 'Fecha de devolución actualizada a hoy');
+    return redirect()->route('client.books.Mybook')->with('message', 'Fecha de devolución actualizada a hoy');
 }
+
+
+
+
     
     public function delete($id): RedirectResponse
     {
