@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
 
+    
 
     private array $rules=[
              'imagen' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -26,7 +27,7 @@ class BookController extends Controller
 
 
     public function index(Request $request):View{
-        
+        $search = $request->input('search');
         if ($request->is('client/Mybooks')) {
             $userId = auth()->id();
             $books = DB::table('books')
@@ -34,14 +35,18 @@ class BookController extends Controller
                 ->where('book_user.user_id', $userId)
                 ->where('book_user.activo', true)
                 ->select('books.*')
-                ->get();
-    
+                ->paginate(1);
+                
             return view('client.books.Mybook', ['books' => $books]);
         } elseif ($request->is('client/books')) {
-            $books = DB::table('books')->get();
+            $books = DB::table('books')->paginate(1);
             return view('client.books.book', ['books' => $books]);
         } else {
-            $books = DB::table('books')->get();
+            $books = Book::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('nombre', 'LIKE', "%{$search}%");
+            })
+            ->paginate(1);
             return view('admin.books.book', ['books' => $books]);
         }
     }
@@ -225,7 +230,9 @@ class BookController extends Controller
 }
 
 
+public function filtrar($nonbre){
 
+}
 
     
     public function delete($id): RedirectResponse

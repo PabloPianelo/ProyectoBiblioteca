@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index():View{
 
         $roles = ['cliente', 'bibliotecario']; // Lista de roles a filtrar
-    $users = User::role($roles)->get();
+    $users = User::role($roles)->paginate(1);;
         //$users= user::myideas($request->filtro)->TheBest($request->filtro)->get();//select * from
         return view('admin.users.user',['users'=>$users]);
     }

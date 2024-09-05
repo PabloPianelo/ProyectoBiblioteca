@@ -54,4 +54,7 @@
             </div>
         </div>
     </div>
+    <div class="p-6">
+        {{ $book->links() }} <!-- Esto muestra los botones de paginación -->
+    </div>
 </x-app-layout>

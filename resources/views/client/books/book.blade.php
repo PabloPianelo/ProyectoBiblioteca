@@ -9,10 +9,7 @@
             <span class="text-indigo-600 text-xl">{{session('message')}}</span>
             </div>  
             @endif
-                    {{-- <div class="p-6 text-gray-900 dark:text-gray-100s space-x-8">
-                        <a href="{{route ('admin.books.create') }}" class="px-4 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('Agregar') }}</a>
-                        <a href="#" class="px-4 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-sm text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('Las Mejores') }}</a>
-                    </div> --}}
+                  
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                 @forelse($books as $book)
@@ -54,5 +51,8 @@
                 @endforelse
             </div>
         </div>
+    </div>
+    <div class="p-6">
+        {{ $books->links() }} <!-- Esto muestra los botones de paginación -->
     </div>
 </x-app-layout>
