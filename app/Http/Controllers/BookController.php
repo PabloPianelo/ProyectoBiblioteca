@@ -35,18 +35,27 @@ class BookController extends Controller
                 ->where('book_user.user_id', $userId)
                 ->where('book_user.activo', true)
                 ->select('books.*')
-                ->paginate(1);
+                ->when($search, function ($query, $search) {
+                    return $query->where('nombre', 'LIKE', "%{$search}%");
+                })
+                ->paginate(2);
                 
             return view('client.books.Mybook', ['books' => $books]);
         } elseif ($request->is('client/books')) {
-            $books = DB::table('books')->paginate(1);
+           // $books = DB::table('books')->paginate(2);
+           $books = Book::query()
+           ->when($search, function ($query, $search) {
+               return $query->where('nombre', 'LIKE', "%{$search}%");
+           })
+           ->paginate(2);
             return view('client.books.book', ['books' => $books]);
         } else {
             $books = Book::query()
             ->when($search, function ($query, $search) {
                 return $query->where('nombre', 'LIKE', "%{$search}%");
             })
-            ->paginate(1);
+            ->paginate(2);
+            // $books = DB::table('books')->paginate(2);
             return view('admin.books.book', ['books' => $books]);
         }
     }

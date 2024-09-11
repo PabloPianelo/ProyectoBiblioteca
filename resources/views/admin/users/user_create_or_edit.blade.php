@@ -5,7 +5,8 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <form method="POST" action="{{route('admin.users.store') }}" enctype="multipart/form-data">
                      
-                       
+                        @csrf
+                        @method(empty($user) ? 'POST' : 'PUT')
 
                         @if(session('error'))
                             <div class="bg-red-500 text-white p-3 rounded mb-3">

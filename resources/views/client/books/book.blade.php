@@ -2,6 +2,17 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden shadow-sm sm:rounded-lg mb-4">
+
+                <div class="px-6 py-4">
+    
+    
+                    <form method="GET" action="{{ route('client.books.book') }}">
+                        <x-text-input name="search" value="{{ request('search') }}" class="w-full" type="text" placeholder="Busqueda por nombre de libro"/>
+                    </form>                
+                
+             {{-- @livewire('book-search-component') --}}
+                
+                </div>
                 @if (session()->has('message'))
                 
           

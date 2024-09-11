@@ -19,10 +19,15 @@ class UserController extends Controller
         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
     ];
-    public function index():View{
+    public function index(Request $request):View{
+        $search = $request->input('search');
 
         $roles = ['cliente', 'bibliotecario']; // Lista de roles a filtrar
-    $users = User::role($roles)->paginate(1);;
+        $users = User::role($roles) // Asegúrate de que el scope `role` esté definido en el modelo User
+        ->when($search, function ($query, $search) {
+            return $query->where('name', 'LIKE', "%{$search}%"); // O el campo que quieras buscar
+        })
+        ->paginate(1);
         //$users= user::myideas($request->filtro)->TheBest($request->filtro)->get();//select * from
         return view('admin.users.user',['users'=>$users]);
     }
